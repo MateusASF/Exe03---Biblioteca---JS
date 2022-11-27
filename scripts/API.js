@@ -45,6 +45,13 @@ window.API = {
             console.log("Erro na comunicação:", error);
         });  
 
+        if(response.ok) {
+            alert('Item Excluído')
+            document.location.reload(true);
+        } else {
+            alert('Erro inesperado')
+        }
+
         if (!response) {
             errorHandler();
             return [];
@@ -84,5 +91,40 @@ window.API = {
         const initialBooks = await response.json();
         sessionStorage.setItem('initialBooks', JSON.stringify(initialBooks));
         return initialBooks;
-    }
+    },
+
+    update: async ({id, tiragem, titulo, autor, descricao}) => {
+        const response = await fetch(urlBase + 'livro', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                uid: id,
+                aluno: {
+                    uid: "bd29827c-2282-4f59-ad04-17a5349304fc",
+                },
+                tiragem: tiragem,
+                titulo: titulo,
+                autor: autor,
+                descricao: descricao,
+            }),
+        }).catch((error) => {
+            alert("Erro na comunicação:", error);
+        });
+
+        if(response.ok) {
+            alert('Item Editado')
+            document.location.reload(true);
+        } else {
+            alert('Erro inesperado')
+        }
+
+        if (!response) {
+            errorHandler(response);
+            return [];
+        }
+
+        return await response.json();
+    },
 }

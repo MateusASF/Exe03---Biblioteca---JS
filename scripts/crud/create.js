@@ -50,7 +50,13 @@ window.page.create = () => {
                 descricao: desc.input.value
             });
 
+            tiragem.input.value = ""
+            titulo.input.value = ""
+            autor.input.value = ""
+            desc.input.value = ""
         }
-    }));    
+    }));   
+    
+
     main.appendChild(form);   
 }

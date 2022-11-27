@@ -1,4 +1,5 @@
 window.common = {
+    //CREATE
     createField: ({labelText, inputType = "text", field, required}) => {
         const fieldElement = common.createHtmlTag('fieldset',field);
         const labelElement = document.createElement('label');
@@ -18,9 +19,10 @@ window.common = {
         return {field:fieldElement, input:inputElement};
     },
 
-    createHtmlTag: (tag, className = "") => {
+    createHtmlTag: (tag, className = "", idValue = "") => {
         const element = document.createElement(tag);
         element.classList.add(className);
+        element.setAttribute("id", idValue);
         return element;
     },
 
@@ -31,12 +33,13 @@ window.common = {
         return button;
     }, 
 
+    //GET
     listarLivros: ({tituloDoLivro, uidDoLivro, tiragemDoLivro, autorDoLivro, descricaoDoLivro}) => {
         const divListarLivro = document.createElement('div');
         divListarLivro.classList.add('cardLivroLista')
 
         const divTituloLivro = document.createElement('div');
-        divTituloLivro.classList.add('titleEstabelecimento')
+        divTituloLivro.classList.add('titleLivro')
 
         const linkDelete = document.createElement('a');
         const linkEdit = document.createElement('a');
@@ -52,13 +55,15 @@ window.common = {
         const iconEdit = document.createElement('i');
     
         iconDelete.classList.add('material-icons')
+        iconDelete.classList.add('deleteIcon')
         iconEdit.classList.add('material-icons')
+        iconEdit.classList.add('editIcon')
             
         iconDelete.textContent = 'delete';
         iconEdit.textContent = 'edit';
 
-        linkDelete.href = "#"
-        linkEdit.href = "#"
+        // linkDelete.href = "#"
+        // linkEdit.href = "#"
 
         linkEdit.setAttribute("id", uidDoLivro)
         linkEdit.addEventListener('click', common.updateLivro);
@@ -82,8 +87,8 @@ window.common = {
         tiragemLivro.textContent = "Tiragem: " + tiragemDoLivro;
 
         divListarLivro.appendChild(spanLivro);
-        divListarLivro.appendChild(linkDelete);
-        divListarLivro.appendChild(linkEdit);
+        divTituloLivro.appendChild(linkDelete);
+        divTituloLivro.appendChild(linkEdit);
 
         divListarLivro.appendChild(divTituloLivro);
         divListarLivro.appendChild(spanLivro);
@@ -122,6 +127,38 @@ window.common = {
         return array
     },
 
+    //buscar
+    buscar: () => {
+        const divContainerBusca = document.createElement('div')
+
+        divContainerBusca.classList.add('searchBusca')
+
+        const busca = document.createElement('input')
+        busca.setAttribute("placeholder", "Digite o Titulo do Livro")
+
+        const buscaButton = document.createElement('input')
+        buscaButton.setAttribute("type", "submit")
+        buscaButton.setAttribute("value", "BUSCAR")
+
+        
+        divContainerBusca.appendChild(busca)
+        divContainerBusca.appendChild(buscaButton)
+
+        buscaButton.addEventListener('click', () => common.search(busca.value));
+        
+        return divContainerBusca
+    },
+
+    search: async (title) => {
+        const newData = await API.listar(title)
+
+        const limpeza = document.querySelector('.containerCards')
+        limpeza.remove();
+
+        main.appendChild(common.createListaLivros(common.criaCardLivros(newData)))
+    },
+
+    //DELETE
     deleteLivro: async (event) => { 
         console.log(event)
 
@@ -132,4 +169,37 @@ window.common = {
 
         document.location.reload(true);
     },
+
+    //UPDATE
+    updateLivro: async (event) => {
+        console.log(event)
+
+        const idValue = event.path[1].id
+
+        const form = document.querySelector('.editForm')
+
+        form.setAttribute('id', idValue)
+
+        form.style.display = 'block';
+    },
+
+    //info 
+    info: () => {
+        const containerInfo = document.createElement('div')
+        containerInfo.classList.add('divContainerInfo')
+
+        const imgPessoal = document.createElement('img')
+        const titulo = document.createElement('h1')
+        const sobre = document.createElement('h3')
+
+        imgPessoal.setAttribute('src', '../assets/foto.jpg')
+
+        titulo.textContent = 'Atividade de Front Dinâmico em Vanilla JS'
+        sobre.textContent = 'Atividade realizada por Mateus Augusto dos Santos Fonseca, com o projeto de realizar um modelo de cadastro de biblioteca'
+
+        containerInfo.appendChild(imgPessoal)
+        containerInfo.appendChild(titulo)
+        containerInfo.appendChild(sobre)
+        return containerInfo;
+    }
 }
