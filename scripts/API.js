@@ -29,8 +29,8 @@ window.API = {
     },
 
 
-    delete: async (uidLivro) => {
-        const response = await fetch(`${urlBase}`, {
+    delete: async (uid) => {
+        const response = await fetch(`${urlBase + 'livro'}`, {
             method: "DELETE",
             headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ window.API = {
             aluno: {
                 uid: "bd29827c-2282-4f59-ad04-17a5349304fc",
             },
-            uidLivro
+            uid
             }),
         }).catch((error) => {
             console.log("Erro na comunicação:", error);
